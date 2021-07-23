@@ -20,4 +20,4 @@ This repo is the starting point for the Policy Difference Engine. It is made up 
 
 ### Front-end Web App
 
-[Repo](https://github.com/DTS-STN/babel-web=app)
+[Repo](https://github.com/DTS-STN/babel-web-app)
