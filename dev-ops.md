@@ -18,13 +18,13 @@ All of the services are currently hosted on Azure. The following is a list of th
 
 
 ## Starting from Scratch
-Suppose you have access to all of the (PDE repos)[https://github.com/DTS-STN/babel-main/blob/main/components.md], but nothing is deployed to any environment. You can start by running the projects locally to ensure they are working together.
+Suppose you have access to all of the [PDE repos](https://github.com/DTS-STN/babel-main/blob/main/components.md), but nothing is deployed to any environment. You can start by running the projects locally to ensure they are working together.
 
 ### Running Locally
 Pull down the three main repos:
-- (babel-rules-engine)[https://github.com/DTS-STN/babel-rules-engine]
-- (babel-simulation-engine)[https://github.com/DTS-STN/babel-simulation-engine]
-- (babel-web-app)[https://github.com/DTS-STN/babel-web-app]
+- [babel-rules-engine](https://github.com/DTS-STN/babel-rules-engine)
+- [babel-simulation-engine](https://github.com/DTS-STN/babel-simulation-engine)
+- [babel-web-app](https://github.com/DTS-STN/babel-web-app)
 
 All three projects are built using .NET Core 3.1. Since these are all running as web applications, they will need to be running on different ports when developing locally. This can be configured in the launchsettings.json file. By default, the rules engine is on 6000/6001, the simulation engine is on 7000/7001, and the web app is on 5000/5001.
 
