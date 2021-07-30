@@ -57,11 +57,11 @@ The goal of the PDE is not to replace any existing systems or policy analyst pos
 ## PDE Components
 Based on our research and existing systems, we’ve identified 4 conceptual components of the PDE, which we will briefly outline here.
 
+![PDE Conceptual Components](https://github.com/DTS-STN/babel-main/blob/main/images/conceptual_components.jpg)
+
 We begin with the rules engine. This is an API that encodes the rules for calculating maternity benefit entitlements for a given person. It takes a “Rules-as-Code” approach, meaning the rules are defined collaboratively alongside policy experts, and the system is exposed as a reusable API. A contract is defined where a consuming application sends the engine details of the individual (such as average income) as well as the rule values to use in the calculation, and the engine returns the amount that the individual is entitled to.
 
 The data represents the different individuals that are being simulated. Each data point contains data that is required for the actual calculation (e.g. average weekly income), as well as demographic data, which can be used for aggregation purposes. 
-
-IMAGE GOES HERE
 
 The simulation engine connects the data with the rules engine. It is responsible for taking each data point (representing a person) and running it through the rules engine, i.e. calculating the entitlement amount for that person. For the purposes of the PDE, it will actually run each person through the rules engine twice: Once for the existing rule (base case) and again for the proposed change (variant case). Once a simulation is complete, the simulation engine is also responsible for storing the results of the simulation in a database, so that they can be accessed and viewed for further analysis. The simulation engine has the functionality to store the data points for subsequent simulations, run the simulations, and fetch the results of a simulation.
 
