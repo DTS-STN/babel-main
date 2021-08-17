@@ -2,7 +2,8 @@
 
 This page provides the definition and motivation of the Policy Difference Engine and Rules-as-Code approach
 
-## Defining the PDE
+## Motivating Example
+
 The goal of the PDE is to measure the impact of potential changes to rules. By “rules”, we are mainly referring to government rules (legislation, regulation, policy). Team Babel has been working on a prototype for the PDE specifically for Maternity Benefits. Our goal is to show what can be done with a PDE using Maternity Benefits as a proof of concept. It can be assessed as a valuable tool for policy research, expanded to encompass further government rules, and the technology and architecture could be used for related software projects.
 
 We will use the Maternity benefits case as an example to illustrate the function of the PDE. The formula for calculating how much maternity benefits an eligible applicant is entitled to is as follows. It is assumed that the applicant is already deemed to be eligible and that you know the average weekly income (AWI) of the applicant (which is calculated from a record of employment). Let’s suppose an individual has an AWI of $1000.
@@ -38,6 +39,7 @@ And for the AWI of $700:
 We see that the first individual (With AWI of $1000) loses money as a result of the change, and the second individual (With AWI of $700) gains money. These are just two mock examples of measuring the impact of this change. What would be more valuable is if we had real data on a large number of individuals, so that we could see the larger impact of the change.  Demographic data associated with the individuals could also be used to aggregate results of the proposed change and assess the impact from an equity lens. This would be an example of data-driven policy-making, and this is what the PDE seeks to accomplish. 
 
 ## Defining Rules as Code (RaC)
+
 The PDE requires a reliable encoding of the maternity benefits calculation. Without this reliable encoding, the results of the calculations would be incorrect and therefore meaningless. This brings us to one of the main motivators of the PDE - the “Rules as Code” approach. The maternity benefits calculation is part of Canada’s EI act, an important and lengthy piece of legislation. Legislation, regulation, and policy can be thought of as the government “rules” that govern many aspects of our lives. Since these are important rules, it follows that there will be many software applications that need a reliable encoding of these rules, one of which is the PDE (other tools might include HR software, benefits finder applications, service desk tools, etc.). As with all software, it is important that these rules are coded correctly. The specific problem with translating written government rules into code is that the government rules are very complex and often ambiguous. For any given government rule, policy experts will be required to help concretely define the business requirements by clarifying the complexities and resolving ambiguities. Only once this is done can the rules be precisely encoded. 
 
 The fact that these rules are needed across different applications combined with the fact that the business requirements are very complex motivates the idea of a reusable system. Suppose that two different applications require the same government regulation. It would be redundant for both of those teams to spend time reading and interpreting the regulation and then developing and maintaining a coded version of it. What would be far more useful is to develop the system once and then open it up for re-use by other applications that need it. This could be in the form of a software package or exposed as an API. 
@@ -48,6 +50,7 @@ Transparency: Since these are rules that impact the lives of many people, the co
 Precision: The Rules-as-Code system should encode precisely the piece of legislation/regulation/policy itself - nothing more, and nothing less. The goal is to be as close to the written document as possible, so that consumers that use the reusable system have clear expectations of what the system is and isn’t capable of. If the rules are exposed as an API, then an Open API Specification can help clarify this for consumers.
 
 ## Existing Systems
+
 At the start of the fellowship, one of our first ideas was to scan the existing environment to see what already existed for something that resembled a PDE. We were looking for data-driven simulation engines that could potentially be used to inform policy, in particular those related to benefits and entitlements. We came across a few relevant tools, two of which we will mention here.
 - LexImpact: This is a web application created for the income tax system in France that allows you to see the impact of proposed changes to the income tax system on a set of customized individuals.
 - SPSD/M: This is a desktop application created by StatsCanada for measuring the impact of changes to many different government rules. It operates by allowing the user to propose changes to various programs (such as the three mentioned earlier for maternity benefits), and then it runs a simulation of these changes on a population, which is created by carefully merging various anonymous surveys and datasets. It is a very sophisticated piece of software with many use cases. 
@@ -55,6 +58,7 @@ At the start of the fellowship, one of our first ideas was to scan the existing 
 The goal of the PDE is not to replace any existing systems or policy analyst positions, but rather to provide an example of a data-driven tool to the policy-making process that is based on a Rules-as-Code system. The work being done by Team Babel involves creating a coded prototype for the PDE.
 
 ## PDE Components
+
 Based on our research and existing systems, we’ve identified 4 conceptual components of the PDE, which we will briefly outline here.
 
 ![PDE Conceptual Components](https://github.com/DTS-STN/babel-main/blob/main/images/conceptual_components.jpg)
