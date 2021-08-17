@@ -6,16 +6,15 @@ All of the services are currently hosted on Azure. The following is a list of th
 - Azure Container Registry (acr): All of the app services are deployed using docker images which are hosted here
 - Rules Engine: .NET Web API hosted on Azure App Service using a docker image from the acr
 - Simulation Engine: .NET Web API hosted on Azure App Service using a docker image from the acr. Interacts with the production server/database.
-- Mock Simulation Engine: .NET Web API hosted on Azure App Service using a docker image from the acr. Interacts wit the mock server/database.
 - Babel Web app: .NET MVC Web Application hosted on Azure App Service using a docker image from the acr. Interacts with the Simulation engine.
-- Mock Babel Web app: .NET MVC Web Application hosted on Azure App Service using a docker image from the acr. Interacts with the Mock Simulation engine.
-- Production Database: Azure SQL Server - Holds the data and results associated with simulations run by the Simulation Engine
-- Mock Database: Azure SQL Server - Holds the data and results associated with simulations run by the Mock Simulation Engine
+- Server/Database: Azure SQL Server - Holds the data and results associated with simulations run by the Simulation Engine
+
+Note: You may want to have multiple deployments of certain components to accommodate separate datasets. For example, you may want to have a system that uses real data, and another that uses mock data. This will require separate services. For example, you would likely need to create two separate server/dbs, two separate simulation engine deployments (each one connecting to a different server/db), and two separate web app deployments (each one connecting to a different simulation engine). You may not need a separate deployment for the rules engine, since it is not associated with any data - it simply acts as a rules calculator.
 
 ### Optional Services
 - Rules Gateway: Azure API Management layer. Re-routes traffic to the Rules API
 - OpenFisca Engine: Optional component of the rules engine. Exposed as a Web API, and hosted on Azure App Service using a docker image from the acr
-
+- PowerBI: Allows sophisticated visualizations of the simulation results
 
 ## Starting from Scratch
 Suppose you have access to all of the [PDE repos](https://github.com/DTS-STN/babel-main/blob/main/components.md), but nothing is deployed to any environment. You can start by running the projects locally to ensure they are working together.
@@ -26,15 +25,15 @@ Pull down the three main repos:
 - [babel-simulation-engine](https://github.com/DTS-STN/babel-simulation-engine)
 - [babel-web-app](https://github.com/DTS-STN/babel-web-app)
 
-All three projects are built using .NET Core 3.1. Since these are all running as web applications, they will need to be running on different ports when developing locally. This can be configured in the launchsettings.json file. By default, the rules engine is on 6000/6001, the simulation engine is on 7000/7001, and the web app is on 5000/5001.
+All three projects are built using .NET Core 3.1, so you will need to install the [.NET core SDK](https://dotnet.microsoft.com/download). Since these are all running as web applications, they will need to be running on different ports when developing locally. This can be configured in the launchsettings.json file. By default, the rules engine is on 6000/6001, the simulation engine is on 7000/7001, and the web app is on 5000/5001.
 
 Let's start with the Rules Engine. If you aren't using OpenFisca, then there are no configurations that must be set. Simply run the application. 
 
-Next is the simulation engine. This is the tricky one since it requires a database. You can connect with a local SQL Server, or you can spin up an Azure SQL database. See the section on setting up a database for this step. Once the database is set up, ensure the connection string is set appropriately in appsettings (or environment variable). You will also need to configure the Rules API Url in the settings. If the Rules API is running on localhost:6000, then set that as the Rules Url. Run the simulation engine.
+Next is the simulation engine. If you simply want to run it for development and testing purposes, then you may not need an actual database, since there is a built-in cache storage implementation. Ensure the cache storage is being injected in and that the mocks will be generated on startup. Both of these can be confirmed and configured in the Startup.cs file. If you want persistent data and need a database, you can spin up an Azure SQL database. See the section on setting up a database for this step. Once the database is set up, ensure the connection string is set appropriately in appsettings (or environment variable), and the the DB storage systems are being injected into the applications (Startup.cs). You will also need to configure the Rules API Url in the settings. If the Rules API is running on localhost:6000, then set that as the Rules Url. Run the simulation engine.
 
 The projects are set up to read the appsettings.ENVIRONMENT.json files, or if those are missing, then it looks for environment variables. When running locally, you can enter the config settings in the appsettings.Development.json. Take care to not commit these to source control. They are not needed for deployment. 
 
-For the Rules and Simulation Engines, there are postman collections in the repos which can be used to test the projects locally (and when they are deployed).
+For the Rules and Simulation Engines, there are postman collections in the repos which can be used to test the projects locally (and also when they are deployed).
 
 Finally, we need to run the web app. The only config that needs to be set is the Simulation Url. Set that and run the project. You should be able to open it up in a browser, run simulations, and view results.
 
@@ -91,5 +90,5 @@ We can create app services for each application we want to deploy. You can deplo
   - Tag: latest
 - Review and Create
 
-Now we just need to set up the config settings. We did not commit the appSettings.Production.json file to source control, so instead we are going to inject environment variables through Azure. Navigate to your newly created app service, find the configurations, and set the appropriate config variables. Saving this will restart the application.
+Now we just need to set up the config settings. We did not commit the appSettings.Production.json file to source control, so instead we are going to inject environment variables through Azure. Navigate to your newly created app service, find the configurations (usually in Startup.cs), and set the appropriate config variables. Saving this will restart the application.
 
