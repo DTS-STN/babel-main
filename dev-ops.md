@@ -19,23 +19,37 @@ Note: You may want to have multiple deployments of certain components to accommo
 ## Starting from Scratch
 Suppose you have access to all of the [PDE repos](https://github.com/DTS-STN/babel-main/blob/main/components.md), but nothing is deployed to any environment. You can start by running the projects locally to ensure they are working together.
 
+### Software and Services
+The following software/services are needed for basic development
+- [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download/dotnet/3.1)
+- [Postman](https://www.postman.com/)
+- An IDE, such as [VS Code](https://code.visualstudio.com/)
+- [Azure subscription](https://azure.microsoft.com/en-ca/)
+
+If working with the data primer and doing data transfers, you will also need:
+- A SQL client, such as [SSMS](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15)
+- Access to the Government Data lake
+- Oracle SQL Developer (for interacting with the data lake)
+
 ### Running Locally
 Pull down the three main repos:
 - [babel-rules-engine](https://github.com/DTS-STN/babel-rules-engine)
 - [babel-simulation-engine](https://github.com/DTS-STN/babel-simulation-engine)
 - [babel-web-app](https://github.com/DTS-STN/babel-web-app)
 
-All three projects are built using .NET Core 3.1, so you will need to install the [.NET core SDK](https://dotnet.microsoft.com/download). Since these are all running as web applications, they will need to be running on different ports when developing locally. This can be configured in the launchsettings.json file. By default, the rules engine is on 6000/6001, the simulation engine is on 7000/7001, and the web app is on 5000/5001.
+All three projects are built using .NET Core 3.1. They all run as web applications, so they will need to be running on different ports when developing locally. This can be configured in the launchsettings.json file. By default, the rules engine is on 6000/6001, the simulation engine is on 7000/7001, and the web app is on 5000/5001.
 
 Let's start with the Rules Engine. If you aren't using OpenFisca, then there are no configurations that must be set. Simply run the application. 
 
-Next is the simulation engine. If you simply want to run it for development and testing purposes, then you may not need an actual database, since there is a built-in cache storage implementation. Ensure the cache storage is being injected in and that the mocks will be generated on startup. Both of these can be confirmed and configured in the Startup.cs file. If you want persistent data and need a database, you can spin up an Azure SQL database. See the section on setting up a database for this step. Once the database is set up, ensure the connection string is set appropriately in appsettings (or environment variable), and the the DB storage systems are being injected into the applications (Startup.cs). You will also need to configure the Rules API Url in the settings. If the Rules API is running on localhost:6000, then set that as the Rules Url. Run the simulation engine.
+Next is the simulation engine. If you simply want to run it for development and testing purposes, then you may not need an actual database, since there is a built-in cache storage implementation. Ensure the cache storage is being injected in and that the mocks will be generated on startup. Both of these can be confirmed and configured in the Startup.cs file. If you want persistent storage and need a database, you can spin up an Azure SQL database. See the section on setting up a database for this step. Once the database is set up, ensure the connection string is set appropriately in appsettings (or environment variable), and the the DB storage systems are being injected into the applications (Startup.cs). You will also need to configure the Rules API Url in the settings. If the Rules API is running on `http://localhost:6000`, then set that as the Rules Url. Run the simulation engine.
 
-The projects are set up to read the appsettings.ENVIRONMENT.json files, or if those are missing, then it looks for environment variables. When running locally, you can enter the config settings in the appsettings.Development.json. Take care to not commit these to source control. They are not needed for deployment. 
+The projects are set up to read the appsettings.[Environment].json files, or if those are missing, then it looks for environment variables. When running locally, you can enter the config settings in the appsettings.Development.json. Take care to not commit these to source control. They are not needed for deployment. 
 
-For the Rules and Simulation Engines, there are postman collections in the repos which can be used to test the projects locally (and also when they are deployed).
+For the Rules and Simulation Engines, there are postman collections in the repos which can be used to test the projects locally (and also when they are deployed). Import these collections into Postman and create separate environments for the rules and simulation engines.
 
-Finally, we need to run the web app. The only config that needs to be set is the Simulation Url. Set that and run the project. You should be able to open it up in a browser, run simulations, and view results.
+You may encounter an SSL connection error when running the application - for example when the Simulation API attempts to communicate with the Rules API. Since we're developing locally, you can run this command to get rid of the error: `dotnet dev-certs https --trust`. [Relevant Link](https://stackoverflow.com/questions/52939211/the-ssl-connection-could-not-be-established)
+
+Finally, we need to run the web app. The only config that needs to be set is the Simulation Url. Set that and run the project. You should be able to open it up in a browser, run a simulation, and view the results.
 
 ### Setting up a Database
 This is probably the first service you will want to set up on Azure. 
